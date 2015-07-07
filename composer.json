@@ -1,5 +1,5 @@
 {
-    "name": "paulvl/api-responsor",
+    "name": "paulvl/json-api",
     "description": "Package to fast implement an API with Laravel 5.1",
     "keywords": ["framework", "laravel", "api", "jsonapi", "5.1", "package"],
     "license": "MIT",

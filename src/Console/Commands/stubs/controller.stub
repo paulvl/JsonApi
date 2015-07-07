@@ -1,0 +1,82 @@
+<?php
+
+namespace {{namespace}};
+
+use Illuminate\Http\Request;
+
+use PaulVL\JsonApi\Controller as JsonApiController;
+use PaulVL\JsonApi\Response;
+
+class {{class}} extends JsonApiController
+{
+	/**
+	 * Sets the model class that will be handled by this class.
+	 * @var string
+	 */
+	protected $model_class = '';
+
+	/**
+	 * Enables official json api output. If FALSE, return Json result from objects.
+	 * @var boolean
+	 */
+    protected $json_api_format = true;
+
+    /**
+     * saveData functions allows you to manual handle save actions triggered from store function on.
+     * Uncomment this method only if you want to manual handle save actions.
+     * 
+     * @param  array  $inputs There are the request's inputs inyected from store function.
+     * @return PaulVL\JsonApi\response returns response according to action.
+     */
+    
+    /*
+    public function saveData(array $inputs) {
+        try {
+            $response = new Response;
+
+            // handle inputs and create and $object and store it.
+
+            $response->handleData($object); // You should pass an object to response's handleData method.
+            return $response->responseCreated(); // You must return a responseCreated.
+        } catch (Exception $e) { // If any error is fired always return a responseInternalServerError.
+            $response = new Response;
+            return $response->responseInternalServerError();
+        }   
+    }
+    */
+    
+    /**
+     * updateData functions allows you to manual handle update actions triggered from update function on .
+     * Uncomment this method only if you want to manual handle update actions.
+     * 
+     * @param  [type] $object Object inyected from update function.
+     * @param  array  $inputs There are the request's inputs inyected from store function.
+     * @return PaulVL\JsonApi\response returns response according to action.
+     */
+    
+    /*
+    public function updateData($object, array $inputs) {
+        try {
+            $response = new Response;
+
+            // handle inputs and update the $object.
+
+            $response->handleData($user); // You should pass the updated object to response's handleData method.
+            return $response->response(); // You must return a responseOk or just response.
+        } catch (Exception $e) { // If any error is fired always return a responseInternalServerError.
+            $response = new Response;
+            return $response->responseInternalServerError();
+        }   
+    }
+    */   
+
+
+    /**
+     * Only if you need to implement create and edit function 
+     * you can override them. They return error 404 as default.
+     */
+    
+    // public function create() { }
+    // public function edit($id) { }
+    
+}

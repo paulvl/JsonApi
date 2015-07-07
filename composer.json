@@ -1,0 +1,24 @@
+{
+    "name": "paulvl/api-responsor",
+    "description": "Package to fast implement an API with Laravel 5.1",
+    "keywords": ["framework", "laravel", "api", "jsonapi", "5.1", "package"],
+    "license": "MIT",
+    "type": "package",
+    "authors": [
+        {
+            "name": "Paul Vidal",
+            "email": "paul.vidal.lujan@gmail.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {
+        "php": ">=5.5.9",
+        "laravel/framework": "5.1.*",
+        "paulvl/helpers" : "dev-master"
+    },
+    "autoload": {
+        "psr-4": {
+            "PaulVL\\JsonApi\\": "src/"   
+        }
+    }
+}

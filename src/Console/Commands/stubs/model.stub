@@ -1,0 +1,47 @@
+<?php
+
+namespace {{namespace}};
+
+use PaulVL\JsonApi\Model;
+
+class {{class}} extends Model
+{
+
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    protected $fillable = [];
+
+    /**
+     * The attributes excluded from queries and the model's JSON form.
+     *
+     * @var array
+     */
+    protected $hidden = [];
+
+    /**
+     * The relationship included on the model's JSON form.
+     *
+     * @var array
+     */
+    protected $displayable_relations = [
+    	//'relation_example'
+    	];
+
+    /**
+     * Validation rules. If any field needs unique validation, add this rule at the end of the line like example
+     *
+     * @var array
+     */
+    static protected $rules = [
+        //'field_example' => 'required|email|max:255|unique:table,column'
+    ];
+
+    /*
+    public function relation_example() {
+        return $this->belongsTo('Class', 'foreign_key', 'primary_key');
+    }
+    */
+}

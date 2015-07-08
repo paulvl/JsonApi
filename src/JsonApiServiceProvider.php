@@ -26,6 +26,7 @@ class JsonApiServiceProvider extends ServiceProvider {
 	{
 		$this->registerMakeModel();
 		$this->registerMakeController();
+		$this->registerMakeBundle();
 	}
 
     /**
@@ -50,6 +51,18 @@ class JsonApiServiceProvider extends ServiceProvider {
         });
 
         $this->commands('command.paulvl-jsonapi.make-controller');
+    }
+
+    /**
+     * Register the json-api:make-bundle generator.
+     */
+    private function registerMakeBundle()
+    {
+        $this->app->singleton('command.paulvl-jsonapi.make-bundle', function ($app) {
+            return $app['PaulVL\JsonApi\Console\Commands\MakeBundle'];
+        });
+
+        $this->commands('command.paulvl-jsonapi.make-bundle');
     }
  
 }

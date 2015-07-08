@@ -62,7 +62,7 @@ class MakeModel extends Command
      */
     protected function makeModel()
     {
-        $name = $this->argument('name');
+        $name = '\\'.$this->argument('name');
 
         if ($this->files->exists($path = $this->getModelPath($name))) {
             return $this->error('Model already exists!');
@@ -120,7 +120,7 @@ class MakeModel extends Command
      */
     protected function replaceClassName(&$stub)
     {
-        $className = ucwords( str_replace( '\\', '', strrchr( $this->argument('name'), '\\' ) ) );
+        $className = ucwords( str_replace( '\\', '', strrchr( '\\'.$this->argument('name'), '\\' ) ) );
 
         $stub = str_replace( '{{class}}', $className, $stub );
 
@@ -135,8 +135,8 @@ class MakeModel extends Command
      */
     protected function replaceNamespace(&$stub)
     {
-        $name = $this->argument('name');
-        $className = ucwords( str_replace( '\\', '', strrchr( $this->argument('name'), '\\' ) ) );
+        $name = '\\'.$this->argument('name');
+        $className = ucwords( str_replace( '\\', '', strrchr( '\\'.$this->argument('name'), '\\' ) ) );
         $name = StringHelper::str_lreplace('\\', '', str_replace($className, '', $name));
         $namespace = $this->getAppNamespace().$name;
 

@@ -62,7 +62,7 @@ class MakeController extends Command
      */
     protected function makeController()
     {
-        $name = $this->argument('name');
+        $name = '\\'.$this->argument('name');
 
         if ($this->files->exists($path = $this->getControllerPath($name))) {
             return $this->error('Controller already exists!');
@@ -72,7 +72,7 @@ class MakeController extends Command
 
         $this->files->put($path, $this->compileControllerStub());
 
-        $classname = ucwords( str_replace( '\\', '', strrchr( $this->argument('name'), '\\' ) ) );
+        $classname = ucwords( str_replace( '\\', '', strrchr( '\\'.$this->argument('name'), '\\' ) ) );
         $classname_lc = strtolower($classname);
 
         $this->info('json-api controller created successfully.');
@@ -126,7 +126,7 @@ class MakeController extends Command
      */
     protected function replaceClassName(&$stub)
     {
-        $className = ucwords( str_replace( '\\', '', strrchr( $this->argument('name'), '\\' ) ) );
+        $className = ucwords( str_replace( '\\', '', strrchr( '\\'.$this->argument('name'), '\\' ) ) );
 
         $stub = str_replace( '{{class}}', $className, $stub );
 
@@ -141,8 +141,8 @@ class MakeController extends Command
      */
     protected function replaceNamespace(&$stub)
     {
-        $name = $this->argument('name');
-        $className = ucwords( str_replace( '\\', '', strrchr( $this->argument('name'), '\\' ) ) );
+        $name = '\\'.$this->argument('name');
+        $className = ucwords( str_replace( '\\', '', strrchr( '\\'.$this->argument('name'), '\\' ) ) );
         $name = StringHelper::str_lreplace('\\', '', str_replace($className, '', $name));
         $namespace = $this->getAppNamespace() . 'Http\\Controllers' . $name;
 

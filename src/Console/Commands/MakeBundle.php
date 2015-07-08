@@ -66,7 +66,7 @@ class MakeBundle extends Command
      */
     public function handle()
     {
-        $this->model_name = '\\Models\\' . $this->argument('name');
+        $this->model_name = 'Models\\' . $this->argument('name');
         $this->controller_name = '\\API\\' . $this->argument('name') . 'Controller';
 
         $this->info('creating json-api controller and model bundle . . .');

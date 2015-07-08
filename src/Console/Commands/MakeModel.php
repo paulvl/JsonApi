@@ -135,7 +135,7 @@ class MakeModel extends Command
      */
     protected function replaceNamespace(&$stub)
     {
-        $name = '\\'.$this->argument('name');
+        $name = $this->argument('name');
         $className = ucwords( str_replace( '\\', '', strrchr( '\\'.$this->argument('name'), '\\' ) ) );
         $name = StringHelper::str_lreplace('\\', '', str_replace($className, '', $name));
         $namespace = $this->getAppNamespace().$name;

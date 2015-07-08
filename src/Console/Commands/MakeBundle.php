@@ -251,7 +251,11 @@ class MakeBundle extends Command
     {
         $className = ucwords( str_replace( '\\', '', strrchr( $this->model_name, '\\' ) ) );
 
-        $stub = str_replace( '{{model_class}}', $className, $stub );
+        $name = $this->model_name;
+        $name = StringHelper::str_lreplace('\\', '', str_replace($className, '', $name));
+        $namespace = $this->getAppNamespace().$name;
+
+        $stub = str_replace( '{{model_class}}', $namespace . '\\' . $className, $stub );
 
         return $this;
     }

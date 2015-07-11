@@ -25,7 +25,8 @@ class JsonApiServiceProvider extends ServiceProvider {
 	public function register()
 	{
 		$this->registerMakeModel();
-		$this->registerMakeController();
+        $this->registerMakeController();
+		$this->registerMakeNestedController();
 		$this->registerMakeBundle();
 	}
 
@@ -47,6 +48,18 @@ class JsonApiServiceProvider extends ServiceProvider {
     private function registerMakeController()
     {
         $this->app->singleton('command.paulvl-jsonapi.make-controller', function ($app) {
+            return $app['PaulVL\JsonApi\Console\Commands\MakeController'];
+        });
+
+        $this->commands('command.paulvl-jsonapi.make-controller');
+    }
+
+    /**
+     * Register the json-api:make--nested-controller generator.
+     */
+    private function registerMakeNestedController()
+    {
+        $this->app->singleton('command.paulvl-jsonapi.make-nested-controller', function ($app) {
             return $app['PaulVL\JsonApi\Console\Commands\MakeController'];
         });
 

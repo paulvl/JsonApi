@@ -29,12 +29,17 @@ class Response
 
     private $execute_with_relations = true;
 
+    private $header = [];
+
     public function __construct($http_status_code = HttpStatusCode::CODE_200_OK)
     {
         $this->http_status_code = $http_status_code;
         $this->json_api_format = config("json-api.json-api-format", true);
         $this->api_version = config("json-api.api-version", "1.0");
         $this->meta = config("json-api.meta", [ 'copyright' => "Copyright 2015 Your Bussiness App.",'authors' => ["Paul Vidal"] ]);
+        $this->header = [
+            'Content-Type' => config("json-api.content-type", 'application/vnd.api+json')
+        ];
     }
 
     public function __set($key, $value)
@@ -95,10 +100,14 @@ class Response
         }
         $this->body['meta'] = $this->meta;
         $this->body['jsonapi'] = [ 'version' => $this->api_version ];
-        return new JsonResponse($this->body, $this->http_status_code, ['Content-Type' => 'application/vnd.api+json'], $this->options);
+        return new JsonResponse($this->body, $this->http_status_code, $this->header, $this->options);
     }
 
     public function withoutRelations() {
         $this->execute_with_relations = false;
+    }
+
+    public function addMeta(array $meta) {
+        $this->meta = array_merge($meta, $this->meta);
     }
 }

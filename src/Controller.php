@@ -11,6 +11,8 @@ use Illuminate\Foundation\Validation\ValidatesRequests;
 use PaulVL\JsonApi\DataHandler;
 use PaulVL\JsonApi\Response;
 use PaulVL\Helpers\StringHelper;
+use PaulVL\JsonApi\PaginationHelper;
+use PaulVL\JsonApi\QueryHelper;
 
 class Controller extends IlluminateController
 {
@@ -27,16 +29,60 @@ class Controller extends IlluminateController
      *
      * @return PaulVL\JsonApi\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-    	$class = $this->model_class;
         $response = new Response();
+
+        $class = $this->model_class;
+
+        $query = $request->get('q', null);
+
+        $per_page = $request->get('paginate', null);
+
+        $current_page = $request->get('page', 1);
+
+        $data = $class::orderBy('created_at', 'ASC');
+
+        $url = $request->url();
+
+        if(!empty($query)) {
+
+            $queries = QueryHelper::getQueriesFromRequest($request);
+
+            if(!QueryHelper::validateQueriesArray($queries)) {
+                return $response->responseUnprocessableEntity();
+            }
+
+            if(!$data = QueryHelper::queryData($data, $queries)) {
+                return $response->responseUnprocessableEntity();
+            }
+
+            $url .= '?q=' . $query;
+
+        }
+
+        $data = $data->get();
+
+        if( !empty($per_page) ) {
+
+            if( !PaginationHelper::validatePagination($per_page, $current_page) ) {
+                return $response->responseUnprocessableEntity();
+            }
+
+            $pagination_information = PaginationHelper::getPaginationInfo( $data, $per_page, $current_page, $url, (!empty($query)) );
+
+            $data = $data->forPage($current_page, $per_page);
+
+            $response->addMeta($pagination_information);
+
+        }
+
         /* MANUAL DATA HANDLING
     	$handler = new DataHandler($class::all());
 	    $response->data = $handler->getApiJsonableData(true);
         */
-        $response->withoutRelations();
-        $response->handleData($class::all());
+        //$response->withoutRelations();
+        $response->handleData($data);
 	    return $response->response();
     }
 

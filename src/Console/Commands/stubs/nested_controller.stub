@@ -21,12 +21,6 @@ class {{class}} extends JsonApiController
      */
     protected $relationship_name = '';
 
-	/**
-	 * Enables official json api output. If FALSE, return Json result from objects.
-	 * @var boolean
-	 */
-    protected $json_api_format = true;
-
     /**
      * saveData functions allows you to manual handle save actions triggered from store function on.
      * Uncomment this method only if you want to manual handle save actions.

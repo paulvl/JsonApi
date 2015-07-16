@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model as Eloquent;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
+use DB;
 
 use PaulVL\Helpers\StringHelper;
 
@@ -37,7 +38,7 @@ class Model extends Eloquent
 	}
 
 	public function getVisibleAttributes() {
-		$all_attributes = $this->getAttributes();
+		$all_attributes = DB::getSchemaBuilder()->getColumnListing($this->getTable());
 	    $hidden = array_flip( $this->getHidden() );
 	    $visible_attributes = array_diff_key($all_attributes, $hidden);
 	    return $visible_attributes;

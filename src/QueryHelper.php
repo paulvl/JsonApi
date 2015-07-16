@@ -8,19 +8,19 @@ use Illuminate\Database\Eloquent\Builder;
 class QueryHelper
 {
 	static $valid_conditions = [
+		'where',
+		'orWhere',
+		'whereBetween',
+		'whereNotBetween',
+		'whereIn',
+		'whereNotIn',
+		'whereNull',
+		'whereNotNull',
 		'groupBy',
 		'orderBy',
-		'where',
-		'whereBetween',
-		'whereIn',
-		'whereNotBetween',
-		'whereNotIn',
-		'whereNotNull',
-		'whereNull',
-		'orWhere',
 	];
 
-	public static function getQueriesFromRequest(Request $request)
+	public static function getRawQueriesFromRequest(Request $request)
 	{
 
 		$_conditions = explode("|", $request->get('q', null));
@@ -48,7 +48,7 @@ class QueryHelper
 	    return $queries;
 	}
 
-	public static function validateQueriesArray(array $queries)
+	public static function validateRawQueriesArray(array $queries)
 	{
 		foreach ($queries as $condition => $values) {
 			if(!in_array($condition, self::$valid_conditions)) {
@@ -58,7 +58,7 @@ class QueryHelper
 		return true;
 	}
 
-	public static function queryData(Builder $builder, array $conditions)
+	public static function rawQueryData(Builder $builder, array $conditions)
 	{
 		foreach ($conditions as $condition => $array) {
 			try {
@@ -128,6 +128,30 @@ class QueryHelper
 				return false;	
 			}			
 		}
+	}
+
+	public static function columnQueryData(Builder $builder, array $inputs, array $valid_columns, $url_has_parameters)
+	{
+		$url = $url_has_parameters ? '&' : '?';
+
+		$has_parameters = false;
+
+		$counter = 0;
+
+		foreach ($inputs as $column => $value) {
+			if(in_array($column, $valid_columns))
+			{
+				$builder = $builder->where($column, $value);
+				$prefix = ($counter > 0) ? '&' : '';
+				$url .= $prefix . $column . '=' . $value;
+				$has_parameters = true;
+			}
+			$counter++;
+		}
+		$column_query['builder'] = $builder;
+		$column_query['url'] = $url;
+		$column_query['has_parameters'] = $has_parameters;
+		return $column_query;
 	}
 
 }

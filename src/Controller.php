@@ -10,6 +10,7 @@ use Illuminate\Foundation\Validation\ValidatesRequests;
 
 use PaulVL\JsonApi\DataHandler;
 use PaulVL\JsonApi\Response;
+use PaulVL\Helpers\ArrayHelper;
 use PaulVL\Helpers\StringHelper;
 use PaulVL\JsonApi\PaginationHelper;
 use PaulVL\JsonApi\QueryHelper;
@@ -35,31 +36,38 @@ class Controller extends IlluminateController
 
         $class = $this->model_class;
 
-        $query = $request->get('q', null);
+        $raw_query = $request->get('q', null);
 
-        $per_page = $request->get('paginate', null);
+        $per_page = $request->get('_paginate', null);
 
-        $current_page = $request->get('page', 1);
+        $current_page = $request->get('_page', 1);
 
-        $data = $class::orderBy('created_at', 'ASC');
+        $data = $class::orderBy('created_at', 'asc');
 
         $url = $request->url();
 
-        if(!empty($query)) {
+        $inputs = $request->all();
 
-            $queries = QueryHelper::getQueriesFromRequest($request);
+        if(!empty($raw_query)) {
 
-            if(!QueryHelper::validateQueriesArray($queries)) {
+            $queries = QueryHelper::getRawQueriesFromRequest($request);
+
+            if(!QueryHelper::validateRawQueriesArray($queries)) {
                 return $response->responseUnprocessableEntity();
             }
 
-            if(!$data = QueryHelper::queryData($data, $queries)) {
+            if(!$data = QueryHelper::rawQueryData($data, $queries)) {
                 return $response->responseUnprocessableEntity();
             }
 
-            $url .= '?q=' . $query;
+            $url .= '?q=' . $raw_query;
 
         }
+
+        $column_query = QueryHelper::columnQueryData( $data, $inputs, (new $class)->getVisibleAttributes(), ( !empty($raw_query) ) );
+        $data = $column_query['builder'];
+
+        $url .= ( $column_query['has_parameters'] ) ? $column_query['url'] : '';
 
         $data = $data->get();
 
@@ -69,7 +77,7 @@ class Controller extends IlluminateController
                 return $response->responseUnprocessableEntity();
             }
 
-            $pagination_information = PaginationHelper::getPaginationInfo( $data, $per_page, $current_page, $url, (!empty($query)) );
+            $pagination_information = PaginationHelper::getPaginationInfo( $data, $per_page, $current_page, $url, (!empty($raw_query) || $column_query['has_parameters'] ) );
 
             $data = $data->forPage($current_page, $per_page);
 
@@ -95,7 +103,13 @@ class Controller extends IlluminateController
     {
     	$class = $this->model_class;
         $response = new Response();
-        $validator = Validator::make( $request->all(), $class::getRules() );
+        $inputs = ArrayHelper::empty_to_null( $request->all() );
+        
+        if (method_exists($this, 'arrangeInputs')) {
+            $inputs = $this->arrangeInputs( $inputs );
+        }
+
+        $validator = Validator::make( $inputs, $class::getRules() );
         
         if ($validator->fails()) {
             $validation_errors = StringHelper::concatInOneLine( $validator->errors()->all(), ' ' );
@@ -103,10 +117,10 @@ class Controller extends IlluminateController
         }
         
         if (method_exists($this, 'saveData')) {
-            return $this->saveData( $request->all() );
+            return $this->saveData( $inputs );
         }else {
             try {
-                $object = $class::create( $request->all() );
+                $object = $class::create( $inputs );
                 return $response->responseCreated();
             } catch (Exception $e) {
                 return $response->responseInternalServerError();
@@ -143,7 +157,7 @@ class Controller extends IlluminateController
     	$class = $this->model_class;
         $response = new Response();
         $object = $class::findOrFail($id);
-        $inputs = $request->all();
+        $inputs = ArrayHelper::empty_to_null( $request->all() );
 
         $validator = Validator::make( $inputs, $object->getUpdateRules() );
         

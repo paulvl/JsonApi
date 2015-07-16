@@ -15,12 +15,6 @@ class {{class}} extends JsonApiController
 	 */
 	protected $model_class = '{{model_class}}';
 
-	/**
-	 * Enables official json api output. If FALSE, return Json result from objects.
-	 * @var boolean
-	 */
-    protected $json_api_format = true;
-
     /**
      * saveData functions allows you to manual handle save actions triggered from store function on.
      * Uncomment this method only if you want to manual handle save actions.
@@ -67,6 +61,21 @@ class {{class}} extends JsonApiController
             $response = new Response;
             return $response->responseInternalServerError();
         }   
+    }
+    */
+    
+    /**
+     * arrangeInputs functions allows you to manual handle inputs before validation.
+     * Uncomment this method only if you want to manual arrange inputs.
+     * 
+     * @param  array  $inputs There are the request's inputs inyected from store function.
+     * @return array  $inputs.
+     */
+    
+    /*
+    public function arrangeInputs(array $inputs) {
+        // arrange inputs.
+        return $$inputs;
     }
     */   
 

@@ -25,7 +25,7 @@ class Response
 
     protected $http_status_code;
 
-    protected $options = 0;
+    protected $options = JSON_UNESCAPED_UNICODE;
 
     private $execute_with_relations = true;
 
@@ -71,7 +71,7 @@ class Response
         $this->data = $handler->getApiJsonableData($this->json_api_format);
     }
 
-    private function prepareCorrectResponse($http_status_code = HttpStatusCode::CODE_200_OK, $options = 0)
+    private function prepareCorrectResponse($http_status_code = HttpStatusCode::CODE_200_OK, $options = JSON_UNESCAPED_UNICODE)
     {
         $this->http_status_code = $http_status_code;
         $this->options = $options;
@@ -79,7 +79,7 @@ class Response
         return $this->makeResponse();
     }
 
-    private function prepareErrorResponse($http_status_code, $status, $title, $detail = null, $code = null, $options = 0)
+    private function prepareErrorResponse($http_status_code, $status, $title, $detail = null, $code = null, $options = JSON_UNESCAPED_UNICODE)
     {
         $this->http_status_code = $http_status_code;
         $this->options = $options;

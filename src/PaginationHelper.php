@@ -66,11 +66,11 @@ class PaginationHelper
 
 	private static function makePaginationURLs( $url, $url_has_parameters, $per_page, $last_page, $current_page ) {		
 
-		$url = ( ($url_has_parameters) ? $url . '&paginate=' : $url.'?paginate=' ) . $per_page;
+		$url = ( ($url_has_parameters) ? $url . '&_paginate=' : $url.'?_paginate=' ) . $per_page;
 
-		$next_page_url = ( ($current_page >= $last_page) || ($current_page < 1) ) ? null : $url . '&page=' . ($current_page + 1) ;
+		$next_page_url = ( ($current_page >= $last_page) || ($current_page < 1) ) ? null : $url . '&_page=' . ($current_page + 1) ;
 
-		$prev_page_url = ( ($current_page <= 1) || ($current_page > $last_page) ) ? null : $url . '&page=' . ($current_page - 1) ;
+		$prev_page_url = ( ($current_page <= 1) || ($current_page > $last_page) ) ? null : $url . '&_page=' . ($current_page - 1) ;
 
 		$urls = [
 			"next_page_url" => $next_page_url,

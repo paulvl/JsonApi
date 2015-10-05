@@ -144,7 +144,7 @@ this will produce a json-api result response that will look like this:
     }
   ],
   "meta": {
-    "copyright": "Copyright 2015 Your Bussiness App.",
+    "copyright": "Copyright 2015 Your Business App.",
     "authors": [
       "Paul Vidal"
     ]
